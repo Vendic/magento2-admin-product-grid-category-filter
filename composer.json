@@ -1,0 +1,16 @@
+{
+    "name": "vendic/magento2-admin-product-grid-category-filter",
+    "description": "Module implements a category filter in the admin product grid",
+    "require": {
+        "php": "~8.2|~8.3"
+    },
+    "type": "magento2-module",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Vendic\\AdminProductGridCategoryFilter\\": ""
+        }
+    }
+}
