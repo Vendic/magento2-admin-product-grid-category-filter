@@ -1,11 +1,11 @@
-name: Run setup:di:compile
+name: phpstan
 on: [push]
 
 env:
   temp-branch: continuous-integration-test-branch-v2
 
 jobs:
-  build:
+  phpstan:
     strategy:
       matrix:
         include:

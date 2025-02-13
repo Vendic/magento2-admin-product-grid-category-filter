@@ -1,5 +1,5 @@
 parameters:
-    level: 1
+    level: 6
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#Variable \$block might not be defined.#'
