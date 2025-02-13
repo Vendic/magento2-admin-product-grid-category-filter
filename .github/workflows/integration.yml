@@ -37,6 +37,9 @@ jobs:
           && docker exec magento-project-community-edition git config --global --add safe.directory /data/extensions/${{ steps.extension_name.outputs.directory }} \
           && docker exec magento-project-community-edition composer require ${{ steps.extension_name.outputs.composer_name }}:dev-${{ env.temp-branch }}
 
+      - name: Clear generated folder
+        run: docker exec magento-project-community-edition bash -c "rm -rf generated/*"
+
       - name: Install TddWizard fixtures
         run: |
           docker exec magento-project-community-edition bash -c "composer require --dev tddwizard/magento2-fixtures"
