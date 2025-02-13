@@ -43,5 +43,8 @@ jobs:
           && docker exec magento-project-community-edition git config --global --add safe.directory /data/extensions/${{ steps.extension_name.outputs.directory }} \
           && docker exec magento-project-community-edition composer require ${{ steps.extension_name.outputs.composer_name }}:dev-${{ env.temp-branch }}
 
-      - name: Activate the extension and run setup:upgrade and setup:di:compile
-        run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }} && php bin/magento setup:upgrade && php bin/magento setup:di:compile"
+      - name: Activate the extension
+        run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
+
+      - name: Run setup:di:compile
+        run: docker exec magento-project-community-edition bash -c "php bin/magento setup:di:compile"
