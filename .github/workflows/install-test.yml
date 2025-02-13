@@ -16,7 +16,7 @@ jobs:
 
       - uses: mage-os/github-actions/setup-magento@main
         with:
-          php-version: 8.1
+          php-version: 8.2
           tools: composer:v2
           mode: extension
           magento_version: 2.4.7-p4
