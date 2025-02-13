@@ -19,4 +19,4 @@ jobs:
           php-version: 8.1
           tools: composer:v2
           mode: extension
-          magento_version: 2.4.5-p1
+          magento_version: 2.4.7-p4
