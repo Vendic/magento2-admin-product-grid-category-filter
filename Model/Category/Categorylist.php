@@ -8,7 +8,7 @@ use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
 class CategoryList implements \Magento\Framework\Option\ArrayInterface
 {
     public function __construct(
-        private CollectionFactory $collectionFactory
+        private TestTestTestCollectionFactory $collectionFactory
     ) {
     }
 
