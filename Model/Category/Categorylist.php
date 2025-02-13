@@ -14,6 +14,8 @@ class CategoryList implements \Magento\Framework\Option\ArrayInterface
 
     public function toOptionArray() : array
     {
+        $this->testPhpstsanFail();
+
         $collection = $this->collectionFactory->create();
         $collection->addAttributeToSelect('name');
 
