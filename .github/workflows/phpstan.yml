@@ -1,4 +1,4 @@
-name: Run setup:upgrade and setup:di:compile
+name: Run setup:di:compile
 on: [push]
 
 env:
@@ -25,12 +25,6 @@ jobs:
           echo "extension_name=$(xmllint --xpath 'string(/config/module/@name)' etc/module.xml)" >> $GITHUB_OUTPUT
           echo "directory=$(cat composer.json | jq .name -r | cut -d '/' -f2)" >> $GITHUB_OUTPUT
 
-      - name: Output variables
-        run: |
-          echo "composer_name: ${{ steps.extension_name.outputs.composer_name }}"
-          echo "extension_name: ${{ steps.extension_name.outputs.extension_name }}"
-          echo "directory: ${{ steps.extension_name.outputs.directory }}"
-
       - name: Start Docker
         run: PHP_VERSION=${{ matrix.PHP_VERSION }} MAGENTO_VERSION=magento${{ matrix.MAGENTO_VERSION }} docker compose -f .github/workflows/templates/docker-compose.yml up -d
 
@@ -46,5 +40,5 @@ jobs:
       - name: Activate the extension
         run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
 
-      - name: Run setup:di:compile
-        run: docker exec magento-project-community-edition bash -c "php bin/magento setup:di:compile"
+      - name: Run PHPStan
+        run: docker exec magento-project-community-edition /bin/bash -c "./vendor/bin/phpstan analyse --no-progress -c /data/extensions/*/phpstan.neon /data/extensions"
