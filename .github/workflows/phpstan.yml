@@ -33,9 +33,7 @@ jobs:
 
       - name: Upload the code into the docker container
         run: |
-          docker cp $(pwd) magento-project-community-edition:/data/extensions/ \
-          && docker exec magento-project-community-edition git config --global --add safe.directory /data/extensions/${{ steps.extension_name.outputs.directory }} \
-          && docker exec magento-project-community-edition composer require ${{ steps.extension_name.outputs.composer_name }}:dev-${{ env.temp-branch }}
+          docker exec magento-project-community-edition composer require ${{ steps.extension_name.outputs.composer_name }}:"@dev"
 
       - name: Activate the extension
         run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
