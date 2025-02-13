@@ -40,5 +40,9 @@ jobs:
       - name: Activate the extension
         run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
 
-      - name: Run PHPStan
-        run: docker exec magento-project-community-edition /bin/bash -c "./vendor/bin/phpstan analyse --no-progress -c /data/extensions/*/phpstan.neon /data/extensions"
+      - name: Set developer mode
+        run: docker exec magento-project-community-edition bash -c "php bin/magento deploy:mode:set developer"
+
+      - name: Run tests
+        run: docker exec magento-project-community-edition bash -c "cd /data/dev/tests/integration/ && ../../../vendor/bin/phpunit"
+
