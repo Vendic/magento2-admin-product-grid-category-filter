@@ -1,11 +1,11 @@
-name: phpstan
+name: Integration
 on: [push]
 
 env:
   temp-branch: continuous-integration-test-branch-v2
 
 jobs:
-  phpstan:
+  integration:
     strategy:
       matrix:
         include:
@@ -36,6 +36,10 @@ jobs:
           docker cp $(pwd) magento-project-community-edition:/data/extensions/ \
           && docker exec magento-project-community-edition git config --global --add safe.directory /data/extensions/${{ steps.extension_name.outputs.directory }} \
           && docker exec magento-project-community-edition composer require ${{ steps.extension_name.outputs.composer_name }}:dev-${{ env.temp-branch }}
+
+      - name: Install TddWizard fixtures
+        run: |
+          docker exec magento-project-community-edition bash -c "composer require --dev tddwizard/magento2-fixtures"
 
       - name: Activate the extension
         run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
