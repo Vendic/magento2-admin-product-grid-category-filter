@@ -47,6 +47,9 @@ jobs:
       - name: Activate the extension
         run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
 
+      - name: Clear generated folder
+        run: docker exec magento-project-community-edition bash -c "rm -rf generated/*"
+
       - name: Set developer mode
         run: docker exec magento-project-community-edition bash -c "php bin/magento deploy:mode:set developer"
 
