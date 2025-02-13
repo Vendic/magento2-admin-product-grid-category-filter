@@ -1,0 +1,22 @@
+name: Setup Magento Store
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup-magento-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: mage-os/github-actions/setup-magento@main
+        with:
+          php-version: 8.1
+          tools: composer:v2
+          mode: extension
+          magento_version: 2.4.5-p1
