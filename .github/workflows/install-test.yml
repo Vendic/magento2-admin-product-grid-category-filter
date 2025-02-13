@@ -12,6 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Get extension name
+        id: extension_name
+        run: |
+          echo "composer_name=$(cat composer.json | jq .name -r)" >> $GITHUB_OUTPUT
+          echo "extension_name=$( xmllint --xpath 'string(/config/module/@name)' etc/module.xml)" >> $GITHUB_OUTPUT
+
+      - name: Output variables
+        run: |
+          echo "composer_name: ${{ steps.extension_name.outputs.composer_name }}"
+          echo "extension_name: ${{ steps.extension_name.outputs.extension_name }}"
+
       - name: Start Docker
         run: PHP_VERSION=${{ matrix.PHP_VERSION }} MAGENTO_VERSION=magento${{ matrix.MAGENTO_VERSION }} docker compose -f .github/workflows/templates/docker-compose.yml up -d
 
