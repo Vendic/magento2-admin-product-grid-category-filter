@@ -63,9 +63,10 @@ runs:
       run: |
         docker exec ${{ steps.variables.outputs.docker_container_name }} composer require ${{ steps.variables.outputs.composer_name }}:dev-${{ steps.variables.outputs.branch_name }}
 
+    # Workaround for "rm: cannot remove 'generated/code/Magento': Directory not empty"
     - name: Clear generated folder
       shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/*"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/* || (sleep 5 && rm -rf generated/*) || true"
 
     - name: Activate the extension
       shell: bash
