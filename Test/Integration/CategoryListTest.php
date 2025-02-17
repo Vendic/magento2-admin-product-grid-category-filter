@@ -26,7 +26,12 @@ class CategoryListTest extends TestCase
 
         $createdCategoryOption = array_filter(
             $options,
-            fn($option) => str_ends_with($option['label'] instanceof Phrase ? $option['label']->render() : $option['label'], 'Category 1')
+            fn($option) => str_ends_with(
+                $option['label'] instanceof Phrase ?
+                    $option['label']->render() :
+                    $option['label'],
+                'Category 1'
+            )
         );
 
         $this->assertCount(1, $createdCategoryOption);

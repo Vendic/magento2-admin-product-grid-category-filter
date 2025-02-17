@@ -23,7 +23,6 @@ class Category extends \Magento\Ui\Component\Listing\Columns\Column
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
-
     public function prepareDataSource(array $dataSource)
     {
         $productIds = array_column($dataSource['data']['items'], 'entity_id');
