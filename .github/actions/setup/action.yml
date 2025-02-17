@@ -60,7 +60,7 @@ runs:
 
     - name: Check contents of generated/code/Magento
       shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " ls -la generated/code/Magento"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " ls -la generated/code/Magento || true"
 
     - name: Clear generated folder
       shell: bash
