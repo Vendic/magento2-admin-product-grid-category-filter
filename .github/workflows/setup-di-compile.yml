@@ -20,4 +20,4 @@ jobs:
           magento-version: ${{ matrix.MAGENTO_VERSION }}
 
       - name: Run setup:di:compile
-        run: docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "php bin/magento setup:di:compile"
+        run: docker exec ${{ steps.setup.outputs.docker-container-name }} ./retry "php bin/magento setup:di:compile"
