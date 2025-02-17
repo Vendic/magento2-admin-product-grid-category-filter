@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - PHP_VERSION: php82-fpm
+          - PHP_VERSION: php83-fpm
             MAGENTO_VERSION: 2.4.7
     runs-on: ubuntu-latest
     steps:
