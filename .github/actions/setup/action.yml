@@ -34,12 +34,25 @@ runs:
       shell: bash
       run: PHP_VERSION=${{ inputs.php-version }} MAGENTO_VERSION=magento${{ inputs.magento-version }} docker compose -f .github/actions/setup/templates/docker-compose.yml up -d
 
+    - name: Create branch for Composer
+      shell: bash
+      run: git checkout -b ${{ steps.variables.outputs.branch_name }}
+
     - name: Upload the code into the docker container
       shell: bash
       run: |
         docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/ \
-        && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }} \
-        && docker exec ${{ steps.variables.outputs.docker_container_name }} composer require ${{ steps.variables.outputs.composer_name }}"@dev"
+        && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }}
+        
+    - name: Set packagist.org to false
+      shell: bash
+      run: |
+        docker exec ${{ steps.variables.outputs.docker_container_name }} "composer config repositories.packagist.org false"
+
+    - name: Install the extension
+      shell: bash
+      run: |
+        docker exec ${{ steps.variables.outputs.docker_container_name }} composer require ${{ steps.variables.outputs.composer_name }}:dev-${{ steps.variables.outputs.branch_name }}
 
     - name: Clear generated folder
       shell: bash
