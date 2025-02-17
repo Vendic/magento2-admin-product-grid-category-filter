@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <columns name="product_columns" class="Magento\Catalog\Ui\Component\Listing\Columns">
         <column name="category_id" class="Vendic\AdminProductGridCategoryFilter\Ui\Component\Listing\Column\Category">
             <argument name="data" xsi:type="array">
-                <item name="options" xsi:type="object">Vendic\AdminProductGridCategoryFilter\Model\Category\Categorylist</item>
+                <item name="options" xsi:type="object">
+                    Vendic\AdminProductGridCategoryFilter\Model\Category\Categorylist
+                </item>
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">select</item>
                     <item name="add_field" xsi:type="boolean">true</item>
@@ -13,6 +16,5 @@
                 </item>
             </argument>
         </column>
-
     </columns>
 </listing>

@@ -1,0 +1,54 @@
+name: 'Setup Magento'
+description: 'Setup Magento'
+inputs:
+  php-version:
+    description: 'PHP version'
+    required: true
+  magento-version:
+    description: 'Magento version'
+    required: true
+outputs:
+  docker-container-name:
+    description: 'Docker container name'
+    value: ${{ steps.variables.outputs.docker_container_name }}
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install xmllint
+      shell: bash
+      run: sudo apt install -y libxml2-utils
+
+    - name: Set variables
+      shell: bash
+      id: variables
+      run: |
+        echo "composer_name=$(cat composer.json | jq .name -r)" >> $GITHUB_OUTPUT
+        echo "extension_name=$(xmllint --xpath 'string(/config/module/@name)' etc/module.xml)" >> $GITHUB_OUTPUT
+        echo "directory=$(cat composer.json | jq .name -r | cut -d '/' -f2)" >> $GITHUB_OUTPUT
+        echo "branch_name=continuous-integration-test-branch-v2" >> $GITHUB_OUTPUT
+        echo "docker_container_name=magento-project-community-edition" >> $GITHUB_OUTPUT
+
+    - name: Start Docker
+      shell: bash
+      run: PHP_VERSION=${{ inputs.php-version }} MAGENTO_VERSION=magento${{ inputs.magento-version }} docker compose -f .github/actions/setup/templates/docker-compose.yml up -d
+
+    - name: Create branch for Composer and remove version from composer.json
+      shell: bash
+      run: git checkout -b ${{ steps.variables.outputs.branch_name }} && sed -i '/version/d' ./composer.json
+
+    - name: Upload the code into the docker container
+      shell: bash
+      run: |
+        docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/ \
+        && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }} \
+        && docker exec ${{ steps.variables.outputs.docker_container_name }} composer require ${{ steps.variables.outputs.composer_name }}:dev-${{ steps.variables.outputs.branch_name }}
+
+    - name: Clear generated folder
+      shell: bash
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/*"
+
+    - name: Activate the extension
+      shell: bash
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "php bin/magento module:enable ${{ steps.variables.outputs.extension_name }}"
