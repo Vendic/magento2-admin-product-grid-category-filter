@@ -58,9 +58,13 @@ runs:
       shell: bash
       run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "php bin/magento module:enable ${{ steps.variables.outputs.extension_name }}"
 
+    - name: Check contents of generated/code/Magento
+      shell: bash
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " ls -la generated/code/Magento"
+
     - name: Clear generated folder
       shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/*"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " rm -rf generated/*"
 
     - name: Set developer mode
       shell: bash
