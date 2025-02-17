@@ -42,35 +42,14 @@ runs:
       shell: bash
       run: docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/
 
-
     - name: Install the extension in Magento
       shell: bash
       run: docker exec ${{ steps.variables.outputs.docker_container_name }} ./install-composer-package ${{ steps.variables.outputs.composer_name }}:@dev
 
-#    - name: Upload the code into the docker container
-#      shell: bash
-#      run: |
-#        docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/ \
-#        && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }}
-#
-#    - name: Install dev dependencies
-#      shell: bash
-#      run: |
-#        docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "composer require --dev vendic/magento-coding-standard tddwizard/magento2-fixtures"
-#
-#    # We need to disable packagist.org since our extension is published there and conflicts with the local version
-#    # Avoids error: Higher matching version dev-main 3521d85 of vendic/magento2-admin-product-grid-category-filter was found in public repository packagist.org
-#    # than dev-continuous-integration-test-branch-v2 in private. Public package might've been taken over by a malicious entity, please investigate and update package
-#    # requirement to match the version from the private repository
-#    - name: Set packagist.org to false
-#      shell: bash
-#      run: |
-#        docker exec ${{ steps.variables.outputs.docker_container_name }}  bash -c "composer config repositories.packagist.org false"
-#
-#    - name: Install the extension
-#      shell: bash
-#      run: |
-#        docker exec ${{ steps.variables.outputs.docker_container_name }} composer require ${{ steps.variables.outputs.composer_name }}:dev-${{ steps.variables.outputs.branch_name }}
+    - name: Install dev dependencies
+      shell: bash
+      run: |
+        docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "composer require --dev vendic/magento-coding-standard tddwizard/magento2-fixtures"
 
     - name: Activate the extension
       shell: bash
