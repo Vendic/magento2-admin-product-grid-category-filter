@@ -1,9 +1,6 @@
 name: Run setup:di:compile
 on: [push]
 
-env:
-  temp-branch: continuous-integration-test-branch-v2
-
 jobs:
   compilation:
     strategy:
@@ -13,35 +10,14 @@ jobs:
             MAGENTO_VERSION: 2.4.7
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Install xmllint
-        run: sudo apt install -y libxml2-utils
-
-      - name: Get extension name
-        id: extension_name
-        run: |
-          echo "composer_name=$(cat composer.json | jq .name -r)" >> $GITHUB_OUTPUT
-          echo "extension_name=$(xmllint --xpath 'string(/config/module/@name)' etc/module.xml)" >> $GITHUB_OUTPUT
-          echo "directory=$(cat composer.json | jq .name -r | cut -d '/' -f2)" >> $GITHUB_OUTPUT
-
-      - name: Start Docker
-        run: PHP_VERSION=${{ matrix.PHP_VERSION }} MAGENTO_VERSION=magento${{ matrix.MAGENTO_VERSION }} docker compose -f .github/workflows/templates/docker-compose.yml up -d
-
-      - name: Create branch for Composer and remove version from composer.json
-        run: git checkout -b ${{ env.temp-branch }} && sed -i '/version/d' ./composer.json
-
-      - name: Upload the code into the docker container
-        run: |
-          docker cp $(pwd) magento-project-community-edition:/data/extensions/ \
-          && docker exec magento-project-community-edition git config --global --add safe.directory /data/extensions/${{ steps.extension_name.outputs.directory }} \
-          && docker exec magento-project-community-edition composer require ${{ steps.extension_name.outputs.composer_name }}:dev-${{ env.temp-branch }}
-
-      - name: Clear generated folder
-        run: docker exec magento-project-community-edition bash -c "rm -rf generated/*"
-
-      - name: Activate the extension
-        run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.extension_name.outputs.extension_name }}"
+      - uses: ./.github/actions/setup
+        name: Setup Magento community edition
+        id: setup
+        with:
+          php-version: ${{ matrix.PHP_VERSION }}
+          magento-version: ${{ matrix.MAGENTO_VERSION }}
 
       - name: Run setup:di:compile
-        run: docker exec magento-project-community-edition bash -c "php bin/magento setup:di:compile"
+        run: docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "php bin/magento setup:di:compile"
