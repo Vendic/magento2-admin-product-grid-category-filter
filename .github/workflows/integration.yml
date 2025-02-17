@@ -10,6 +10,8 @@ jobs:
             MAGENTO_VERSION: 2.4.7
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - uses: ./.github/actions/setup
         with:
           php-version: ${{ matrix.PHP_VERSION }}
