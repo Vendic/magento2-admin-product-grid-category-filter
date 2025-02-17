@@ -60,11 +60,11 @@ runs:
 
     - name: Check contents of generated/code/Magento
       shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " ls -la generated/code/Magento || true"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " ls -la /data/generated/code/Magento || true"
 
     - name: Clear generated folder
       shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " rm -rf generated/*"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " rm -rf /data/generated/code/Magento || true"
 
     - name: Set developer mode
       shell: bash
