@@ -49,23 +49,6 @@ runs:
       shell: bash
       run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/*"
 
-    - name: Install TddWizard fixtures
-      shell: bash
-      run: |
-        docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "composer require --dev tddwizard/magento2-fixtures"
-
     - name: Activate the extension
       shell: bash
       run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "php bin/magento module:enable ${{ steps.variables.outputs.extension_name }}"
-
-    - name: Check contents of generated/code/Magento
-      shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " ls -la /data/generated/code/Magento || true"
-
-    - name: Clear generated folder
-      shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c " rm -rf /data/generated/code/Magento || true"
-
-    - name: Set developer mode
-      shell: bash
-      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "php bin/magento deploy:mode:set developer"
