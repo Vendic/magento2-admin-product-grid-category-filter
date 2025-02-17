@@ -28,7 +28,7 @@ runs:
 
     - name: Start Docker
       shell: bash
-      run: PHP_VERSION=${{ inputs.PHP_VERSION }} MAGENTO_VERSION=magento${{ inputs.MAGENTO_VERSION }} docker compose -f .github/workflows/templates/docker-compose.yml up -d
+      run: PHP_VERSION=${{ inputs.php-version }} MAGENTO_VERSION=magento${{ inputs.magento-version }} docker compose -f .github/workflows/templates/docker-compose.yml up -d
 
     - name: Create branch for Composer and remove version from composer.json
       shell: bash
