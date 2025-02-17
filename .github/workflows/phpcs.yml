@@ -19,6 +19,9 @@ jobs:
           php-version: ${{ matrix.PHP_VERSION }}
           magento-version: ${{ matrix.MAGENTO_VERSION }}
 
+      - name: Install Vendic coding standards
+        run: docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "composer require --dev vendic/magento-coding-standard"
+
       - name: Run tests
-        run: docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "cd /data/ && ./vendor/bin/phpcs --standard=Magento2 /data/extensions/"
+        run: docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "cd /data/ && ./vendor/bin/phpcs --standard=VendicMagento2 /data/extensions/"
 
