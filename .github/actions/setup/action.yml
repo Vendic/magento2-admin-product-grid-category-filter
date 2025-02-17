@@ -7,6 +7,11 @@ inputs:
   magento-version:
     description: 'Magento version'
     required: true
+outputs:
+  docker-container-name:
+    description: 'Docker container name'
+    value: ${{ steps.variables.outputs.docker_container_name }}
+
 
 runs:
   using: "composite"
@@ -23,6 +28,7 @@ runs:
         echo "extension_name=$(xmllint --xpath 'string(/config/module/@name)' etc/module.xml)" >> $GITHUB_OUTPUT
         echo "directory=$(cat composer.json | jq .name -r | cut -d '/' -f2)" >> $GITHUB_OUTPUT
         echo "branch_name=continuous-integration-test-branch-v2" >> $GITHUB_OUTPUT
+        echo "docker_container_name=magento-project-community-edition" >> $GITHUB_OUTPUT
 
     - name: Start Docker
       shell: bash
@@ -35,27 +41,27 @@ runs:
     - name: Upload the code into the docker container
       shell: bash
       run: |
-        docker cp $(pwd) magento-project-community-edition:/data/extensions/ \
-        && docker exec magento-project-community-edition git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }} \
-        && docker exec magento-project-community-edition composer require ${{ steps.variables.outputs.composer_name }}:dev-${{ steps.variables.outputs.branch_name }}
+        docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/ \
+        && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }} \
+        && docker exec ${{ steps.variables.outputs.docker_container_name }} composer require ${{ steps.variables.outputs.composer_name }}:dev-${{ steps.variables.outputs.branch_name }}
 
     - name: Clear generated folder
       shell: bash
-      run: docker exec magento-project-community-edition bash -c "rm -rf generated/*"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/*"
 
     - name: Install TddWizard fixtures
       shell: bash
       run: |
-        docker exec magento-project-community-edition bash -c "composer require --dev tddwizard/magento2-fixtures"
+        docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "composer require --dev tddwizard/magento2-fixtures"
 
     - name: Activate the extension
       shell: bash
-      run: docker exec magento-project-community-edition bash -c "php bin/magento module:enable ${{ steps.variables.outputs.extension_name }}"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "php bin/magento module:enable ${{ steps.variables.outputs.extension_name }}"
 
     - name: Clear generated folder
       shell: bash
-      run: docker exec magento-project-community-edition bash -c "rm -rf generated/*"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "rm -rf generated/*"
 
     - name: Set developer mode
       shell: bash
-      run: docker exec magento-project-community-edition bash -c "php bin/magento deploy:mode:set developer"
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} bash -c "php bin/magento deploy:mode:set developer"

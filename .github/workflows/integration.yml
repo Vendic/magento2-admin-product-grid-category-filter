@@ -13,10 +13,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/setup
+        id: setup
         with:
           php-version: ${{ matrix.PHP_VERSION }}
           magento-version: ${{ matrix.MAGENTO_VERSION }}
 
       - name: Run tests
-        run: docker exec magento-project-community-edition bash -c "cd /data/dev/tests/integration/ && ../../../vendor/bin/phpunit"
+        run: docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "cd /data/dev/tests/integration/ && ../../../vendor/bin/phpunit"
 
