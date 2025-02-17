@@ -42,6 +42,10 @@ runs:
       shell: bash
       run: docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/
 
+    - name: Add git safe directory
+      shell: bash
+      run: docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }}
+
     - name: Install the extension in Magento
       shell: bash
       run: docker exec ${{ steps.variables.outputs.docker_container_name }} ./install-composer-package ${{ steps.variables.outputs.composer_name }}:@dev
