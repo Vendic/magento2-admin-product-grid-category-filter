@@ -43,11 +43,11 @@ runs:
       run: |
         docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/ \
         && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }}
-        
+
     - name: Set packagist.org to false
       shell: bash
       run: |
-        docker exec ${{ steps.variables.outputs.docker_container_name }} "composer config repositories.packagist.org false"
+        docker exec ${{ steps.variables.outputs.docker_container_name }}  bash -c "composer config repositories.packagist.org false"
 
     - name: Install the extension
       shell: bash
