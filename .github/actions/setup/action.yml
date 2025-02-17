@@ -44,6 +44,12 @@ runs:
         docker cp $(pwd) ${{ steps.variables.outputs.docker_container_name }}:/data/extensions/ \
         && docker exec ${{ steps.variables.outputs.docker_container_name }} git config --global --add safe.directory /data/extensions/${{ steps.variables.outputs.directory }}
 
+    - name: Install dev dependencies
+      shell: bash
+      run: |
+        docker exec ${{ steps.setup.outputs.docker-container-name }} bash -c "composer require --dev vendic/magento-coding-standard tddwizard/magento2-fixtures"
+
+    # We need to disable packagist.org since our extension is published there and conflicts with the local version
     - name: Set packagist.org to false
       shell: bash
       run: |
