@@ -5,7 +5,7 @@
         <column name="category_id" class="Vendic\AdminProductGridCategoryFilter\Ui\Component\Listing\Column\Category">
             <argument name="data" xsi:type="array">
                 <item name="options" xsi:type="object">
-                    Vendic\AdminProductGridCategoryFilter\Model\Category\Categorylist
+                    Vendic\AdminProductGridCategoryFilter\Model\Category\CategoryList
                 </item>
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">select</item>
